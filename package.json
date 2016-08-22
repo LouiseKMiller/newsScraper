@@ -1,0 +1,31 @@
+{
+  "name": "newsscraper",
+  "version": "1.0.0",
+  "description": "lets users leave comments on the scraped news",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LouiseKMiller/newsScraper.git"
+  },
+  "keywords": [
+    "cheerio",
+    "mongoose"
+  ],
+  "author": "LKMiller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LouiseKMiller/newsScraper/issues"
+  },
+  "homepage": "https://github.com/LouiseKMiller/newsScraper#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cheerio": "^0.20.0",
+    "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.5.9",
+    "request": "^2.74.0"
+  }
+}
