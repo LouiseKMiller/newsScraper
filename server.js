@@ -1,22 +1,22 @@
-/* Scraper: Server #1  (18.2.1) 
+/* Scraper: Server #1  (18.2.1)
  * ========================= */
 
 // Dependencies:
 var request = require('request'); // Snatches html from urls
 var cheerio = require('cheerio'); // Scrapes our html
+// an empty array to save the data that we'll scrape
+var result = [];
 
-
-// Make a request call for the "most-popular" page on theatlantic.com website. 
+// Make a request call for the "most-popular" page on theatlantic.com website.
 // the page's html gets saved as the callback's third arg
 request('http://www.theatlantic.com/most-popular/', function (error, response, html) {
-  
+
   // Load the html into cheerio and save it to a var.
-  // '$' becomes a shorthand for cheerio's selector commands, 
+  // '$' becomes a shorthand for cheerio's selector commands,
   //  much like jQuery's '$'.
   var $ = cheerio.load(html);
 
   // an empty array to save the data that we'll scrape
-  var result = [];
 
 
   // With cheerio, find each p-tag with a "title" class
@@ -32,7 +32,7 @@ request('http://www.theatlantic.com/most-popular/', function (error, response, h
     // link to heading is in <h2> element nested in <a> element
     var title = $(element).find('a').find('h2').text();
 
-      
+
     // save these results in an object that we'll push
     // into the result array we defined earlier
     result.push({
@@ -46,11 +46,9 @@ request('http://www.theatlantic.com/most-popular/', function (error, response, h
 
 
   for (var i=0; i<3; i++){
-    console.log("beginning of loop i", i);
     var articleURL = "http://www.theatlantic.com" + result[i].link;
-    console.log("title", result[i].title);
-    console.log("text", getText(articleURL));
-    
+    getText(articleURL, i);
+
   };
 
   function getText(url, i){
@@ -62,12 +60,12 @@ request('http://www.theatlantic.com/most-popular/', function (error, response, h
       // article text in <p> elements following div with article-body class
       $('.article-body').find('p').each(function(i,element){
         articleText = articleText + $(element).text();
-      });
 
-    result[i].text=articleText;
-    console.log(result[i].text);
+      });
+    result[i].text = articleText;
     }); // end of request
   }; // end of function
-  
+  console.log(result);
+
 })
-  
+
