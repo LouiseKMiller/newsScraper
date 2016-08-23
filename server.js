@@ -1,8 +1,10 @@
+
 //****************************************************************
 //           SCRAPER FOR THE ATLANTIC
 //           MOST POPULAR ARTICLES
 //           WWW.THEATLANTIC.COM/MOST-POPULAR
 //****************************************************************
+
 
 // Dependencies:
 var request = require('request'); // Snatches html from urls
@@ -116,10 +118,11 @@ function getText(url, i){
       // article text in <p> elements following div with article-body class
       $('.article-body').find('p').each(function(i,element){
         articleText = articleText + $(element).text();
-      });
 
       result[i].text=articleText;
       console.log("full text received for article ", i+1, " of ", result.length);
+      });
     } // end of IF ERROR ELSE section
   }); // end of request for url html
 }; // end of getText function  
+
