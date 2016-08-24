@@ -7,6 +7,7 @@
 // Dependencies:
 var request = require('request'); // Snatches html from urls
 var cheerio = require('cheerio'); // Scrapes our html
+var fs = require('fs');
 
 // global variables
 var result = [];
@@ -33,7 +34,9 @@ function scrape(){
           var link = $(element).find('a').attr('href');
 
           // link to image is in <img> element nested in <a> element
-          var image = $(element).find('img').attr('data-src');
+          var imgPath = $(element).find('img').attr('data-src');
+          // load image binary data into imgData
+          var imgData = fs.readFileSync(imgPath);
 
           // link to heading is in <h2> element nested in <a> element
           var title = $(element).find('a').find('h2').text();
@@ -44,7 +47,11 @@ function scrape(){
           result[i]={
             title: title,
             link: link,
-            image: image
+            imgPath: imgPath,
+            img: {
+              data: imgData,
+              contentType: 'image/png';
+            }
           };
           var articleURL = "http://www.theatlantic.com" + result[i].link;
           getText(articleURL,i); 
