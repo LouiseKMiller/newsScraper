@@ -6,7 +6,7 @@
 //****************************************************************
 
 
-// Dependencies
+// ***** DEPENDENCIES ************************
 // Express
 var express = require('express');
 var app = express();
@@ -21,6 +21,7 @@ var mongoose = require('mongoose');
 var request = require('request'); 
 var cheerio = require('cheerio');
 
+// ********* EXPRESS CONFIGURATION **********
 // use morgan and bodyparser with our app
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
@@ -30,8 +31,15 @@ app.use(bodyParser.urlencoded({
 // make public a static dir
 app.use(express.static('public'));
 
+var routes = require('./routes/routes.js');
+app.use('/', routes);
 
+// listen on port 3000
+app.listen(3000, function() {
+  console.log('App running on port 3000!');
+});
 
+// *********** DATABASE CONFIGURATION **********
 // Database configuration with mongoose
 mongoose.connect('mongodb://localhost/scrappingdb');
 var db = mongoose.connection;
@@ -51,8 +59,3 @@ db.once('open', function() {
 
 
 
-
-// listen on port 3000
-app.listen(3000, function() {
-  console.log('App running on port 3000!');
-});

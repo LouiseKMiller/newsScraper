@@ -1,48 +1,51 @@
 // Routes
 // ======
 // Bring in our Note and Article models
-var Note = require('./models/Note.js');
-var Article = require('./models/Article.js');
 
-var scraper = require('./scraper.js');
+var express = require('express');
+var router = express.Router();
+
+
+var Note = require('../models/Note.js');
+var Article = require('../models/Article.js');
+
+var scraper = require('../server_modules/scraper.js');
 
 // Simple index route
-app.get('/', function(req, res) {
+router.get('/', function(req, res) {
   res.send(index.html);
 });
 
 // A GET request to scrape the echojs website.
-app.get('/scrape', function(req, res) {
-  // first, we grab the body of the html with request
+router.get('/scrape', function(req, res) {
+  // run the scraper module
+  // call back function saves result of scraper function into database
+  scraper(function(result){
+    for (var i=0; i<result.length; i++){
+    // using our Article model, create a new entry.
+      var entry = new Article (result[i]);
 
-        // using our Article model, create a new entry.
-        // Notice the (result):
-        // This effectively passes the result object to the entry (and the title and link)
-        var entry = new Article (result);
-
-        // now, save that entry to the db
-        entry.save(function(err, doc) {
-          // log any errors
-          if (err) {
-            console.log(err);
-          } 
-          // or log the doc
-          else {
-            console.log(doc);
-          }
-        });
-
-
-    });
+      // now, save that entry to the db
+      entry.save(function(err, doc) {
+        // log any errors
+        if (err) {
+          console.log(err);
+        } 
+        // or log the doc
+        else {
+          console.log(doc);
+        }
+      }); 
+    } 
   });
   // tell the browser that we finished scraping the text.
   res.send("Scrape Complete");
 });
 
 // this will get the articles we scraped from the mongoDB
-app.get('/articles', function(req, res){
+router.get('/articles', function(req, res){
   // grab every doc in the Articles array
-  Article.find({}, function(err, doc){
+  Article.find({}).select('title link').exec(function(err, doc){
     // log any errors
     if (err){
       console.log(err);
@@ -55,7 +58,7 @@ app.get('/articles', function(req, res){
 });
 
 // grab an article by it's ObjectId
-app.get('/articles/:id', function(req, res){
+router.get('/articles/:id', function(req, res){
   // using the id passed in the id parameter, 
   // prepare a query that finds the matching one in our db...
   Article.findOne({'_id': req.params.id})
@@ -77,7 +80,7 @@ app.get('/articles/:id', function(req, res){
 
 // replace the existing note of an article with a new one
 // or if no note exists for an article, make the posted note it's note.
-app.post('/articles/:id', function(req, res){
+router.post('/articles/:id', function(req, res){
   // create a new note and pass the req.body to the entry.
   var newNote = new Note(req.body);
 
@@ -107,6 +110,4 @@ app.post('/articles/:id', function(req, res){
   });
 });
 
-
-
-
+module.exports = router;

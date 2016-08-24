@@ -19,10 +19,16 @@ var ArticleSchema = new Schema({
     type:String,
     required:true
   },
-  image: {
+  imagePath: {
+    type:String
+  },
+  imageData: {
     data:Buffer,
     contentType: String
-  }
+  },
+  imageData: {
+    type:String
+  },
   // this only saves one note's ObjectId. ref refers to the Note model.
   note: {
       type: Schema.Types.ObjectId,
