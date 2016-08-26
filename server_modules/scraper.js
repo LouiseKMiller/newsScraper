@@ -8,12 +8,14 @@
 var request = require('request'); // Snatches html from urls
 var cheerio = require('cheerio'); // Scrapes our html
 
-module.exports = function(cb)
+module.exports = function(titles, cb)
 {
 // global variables
   var result = [];
   var i=0;
   var j=0;
+
+
 
   // Make a request call for the "most-popular" page on theatlantic.com website. 
   // the page's html gets saved as the callback's third arg
@@ -42,17 +44,23 @@ module.exports = function(cb)
 
           // link to heading is in <h2> element nested in <a> element
           var title = $(element).find('a').find('h2').text();
+          console.log("type of title", typeof(title));
+          console.log("type of titles", typeof(titles));
+          console.log("type of element in titles", typeof(titles[0]));
            
-          // save these results in an object that we'll push
-          // into the result array we defined earlier
-          result.push({
-            title:title,
-            link:link,
-            imagePath:imgPath
-          });
-
+          if (titles.indexOf(title) == -1) {
+            // save these results in an object that we'll push
+            // into the result array we defined earlier
+            result.push({
+              title:title,
+              link:link,
+              imagePath:imgPath
+            });
+          } else {
+            console.log("scraped article already in database");
+          };
         }); // END OF CHEERIO ITERATION THROUGH MOST-POPULAR PAGE
-        console.log("***before getText, lenth is ", result.length)
+        console.log("***before getText, length is ", result.length)
       // NOW WE GATHER THE TEXT OF EACH ARTICLE BY MAKING REQUEST CALLS 
       // FOR EACH ARTICLE FOUND ON THE MOST-POPULAR PAGE
       // USING THE LINKS IN THE RESULT ARRAY
@@ -120,6 +128,9 @@ module.exports = function(cb)
           }; //end of if !result[j].imagePath block
         } //end of if j<result.length block
         else {
+
+          // HERE IS WHERE WE EXECUTE THE CALLBACK FUNCTION AND STORE THE RESULT
+          // IN THE DATABASE.  SEE ROUTES.JS FILE FOR CALLBACK FUNCTION
           cb(result);
         }
       } // end of getImage function

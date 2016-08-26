@@ -13,13 +13,13 @@ var app = express();
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 
-// Database configuration
-// using mongoose 
-var mongoose = require('mongoose');
 
 // Notice: Our scraping tools are prepared, too
 var request = require('request'); 
 var cheerio = require('cheerio');
+
+// ********* DATABASE CONFIGURATION *********
+var db = require('./models/db.js');
 
 // ********* EXPRESS CONFIGURATION **********
 // use morgan and bodyparser with our app
@@ -39,20 +39,6 @@ app.listen(3000, function() {
   console.log('App running on port 3000!');
 });
 
-// *********** DATABASE CONFIGURATION **********
-// Database configuration with mongoose
-mongoose.connect('mongodb://localhost/scrappingdb');
-var db = mongoose.connection;
-
-// show any mongoose errors
-db.on('error', function(err) {
-  console.log('Mongoose Error: ', err);
-});
-
-// once logged in to the db through mongoose, log a success message
-db.once('open', function() {
-  console.log('Mongoose connection successful.');
-});
 
 
 
