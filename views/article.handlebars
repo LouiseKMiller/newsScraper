@@ -10,16 +10,16 @@
         <div id="notes">
             <h2> New Note </h2>
             <h2>{{doc._id}}</h2>
-            <form action='/article/{{doc._id}}' method="POST">
-                <input id="titleinput" name="title" >
+            <form action='/newnote/{{doc._id}}' method="POST">
+                <input id="titleinput" name="user" >
                 <textarea id="bodyinput" name="body"></textarea>
-                <button type="submit" data-id="' + {{doc._id}} + '" id="savenote">Save Note</button>
+                <button type="submit" data-id="{{doc._id}}" id="savenote">Save Note</button>
             </form>
            {{#each doc.note}}
-        	   <h2>{{this.title}}</h2>
+        	   <h2>{{this.user}}</h2>
     		    <p>{{this.body}}</p>
-                <button data-id="' + {{this._id}} + '" id="deletenote">Delete Note</button>
-                <button data-id="' + {{this._id}} + '" id="editnote">Edit Note</button>
+                <button data-id="{{this._id}}" id="deletenote">Delete Note</button>
+                <button data-id="{{this._id}}" id="editnote">Edit Note</button>
 	       {{/each}}
         </div>
   </div>

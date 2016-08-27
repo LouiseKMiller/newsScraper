@@ -89,7 +89,7 @@ router.get('/article/:id', function(req, res){
     // otherwise, send the doc to the browser as a json object
     else {
       var hbsObject = {doc};
-      console.log(doc.note);
+      console.log("console logging doc.note: ", doc.note);
 //      res.contentType(doc.imageType);
  //     res.send(doc.imageData);
       res.render('article', hbsObject);
@@ -100,7 +100,7 @@ router.get('/article/:id', function(req, res){
 //=========================================================
 // replace the existing note of an article with a new one
 // or if no note exists for an article, make the posted note it's note.
-router.post('/article/:id', function(req, res){
+router.post('/newnote/:id', function(req, res){
   // create a new note instance and pass the req.body to the entry.
   var newNote = new Note(req.body);
 
@@ -115,7 +115,8 @@ router.post('/article/:id', function(req, res){
       // using the Article id passed in the id parameter of our url, 
       // prepare a query that finds the matching Article in our db
       // and update it to make it's lone note the one we just saved
-      Article.findOneAndUpdate({'_id': req.params.id}, {'note':doc._id})
+      Article.save({'note':doc._id})
+      .where({'_id': req.params.id}) 
       // execute the above query
       .exec(function(err, doc){
         // log any errors
@@ -123,7 +124,8 @@ router.post('/article/:id', function(req, res){
           console.log(err);
         } else {
           // or send the document to the browser
-          res.send(doc);
+
+          res.redirect('/article/'+req.params.id);
         }
       });
     }
