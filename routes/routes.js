@@ -39,12 +39,12 @@ router.get('/scrape', function(req, res) {
         Article.create(result, function(err, docs){
           if (err){
             console.log(err);
-          } 
+          }
             // log message that documents were saved
           else {
             console.log("documents saved to database");
           };
-        }); // end of Article.create          
+        }); // end of Article.create
       }); // end of scraper function
     }; // end of if else (err)
   }); // end of Article.find
@@ -63,7 +63,7 @@ router.get('/home', function(req, res){
     // log any errors
     if (err){
       console.log(err);
-    } 
+    }
     // or send the doc to the browser as a json object
     else {
       var hbsObject = {doc};
@@ -75,7 +75,7 @@ router.get('/home', function(req, res){
 //=======================================================
 // grab an article by it's ObjectId
 router.get('/article/:id', function(req, res){
-  // using the id passed in the id parameter, 
+  // using the id passed in the id parameter,
   // prepare a query that finds the matching one in our db...
   Article.findOne({'_id': req.params.id})
   // and populate all of the notes associated with it.
@@ -85,13 +85,13 @@ router.get('/article/:id', function(req, res){
     // log any errors
     if (err){
       console.log(err);
-    } 
+    }
     // otherwise, send the doc to the browser as a json object
     else {
       var hbsObject = {doc};
       console.log("console logging doc.note: ", doc.note);
 //      res.contentType(doc.imageType);
- //     res.send(doc.imageData);
+//      res.send(doc.imageData);
       res.render('article', hbsObject);
     }
   });
@@ -103,20 +103,20 @@ router.get('/article/:id', function(req, res){
 router.post('/newnote/:id', function(req, res){
   // create a new note instance and pass the req.body to the entry.
   var newNote = new Note(req.body);
+  console.log('request body in post request', req.body);
 
   // and save the new note the db
   newNote.save(function(err, doc){
     // log any errors
     if(err){
       console.log(err);
-    } 
+    }
     // otherwise
     else {
-      // using the Article id passed in the id parameter of our url, 
-      // prepare a query that finds the matching Article in our db
-      // and update it to make it's lone note the one we just saved
-      Article.save({'note':doc._id})
-      .where({'_id': req.params.id}) 
+      // using the Article id passed in the id parameter of our url,
+      //
+      Article.findOneAndUpdate({'_id': req.params.id,'note':doc._id})
+
       // execute the above query
       .exec(function(err, doc){
         // log any errors
@@ -165,13 +165,13 @@ module.exports = router;
 //
 // *********************** INSTANCE METHODS ******************
 //  Instance methods operate on the instance rather than the model
-//  
+//
 //  SAVE - SAVING USING THE INSTANCE METHOD
 //  var newArticle = new Article({....});
 //  newArticle.save( function(err, doc){
 //  if(!err){console.log('_id of article saved:', doc.id)};
-//    }) 
-//  ** note that doc.id is a string 
+//    })
+//  ** note that doc.id is a string
 //  **       doc._id is an ObjectId SchemaType
 //  ** also note that you can chain the two ops above
 //
