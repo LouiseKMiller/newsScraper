@@ -4,6 +4,10 @@
 
 var express = require('express');
 var router = express.Router();
+var path = require('path');
+var methodOverride = require('method-override');
+
+
 
 var db = require('../models/db.js');
 var Note = require('../models/Note.js');
@@ -13,7 +17,7 @@ var scraper = require('../server_modules/scraper.js');
 
 // Simple index route
 router.get('/', function(req, res) {
-  res.send(index.html);
+  res.redirect('/home');
 });
 
 // ============================================
@@ -51,7 +55,7 @@ router.get('/scrape', function(req, res) {
 
 // ================================================
 // this will get the articles we scraped from the mongoDB
-router.get('/articles', function(req, res){
+router.get('/home', function(req, res){
   // grab every doc in the Articles array
   Article.find({})
   .select('title link')
@@ -62,14 +66,15 @@ router.get('/articles', function(req, res){
     } 
     // or send the doc to the browser as a json object
     else {
-      res.json(doc);
+      var hbsObject = {doc};
+      res.render('home', hbsObject);
     }
   });
 });
 
 //=======================================================
 // grab an article by it's ObjectId
-router.get('/articles/:id', function(req, res){
+router.get('/article/:id', function(req, res){
   // using the id passed in the id parameter, 
   // prepare a query that finds the matching one in our db...
   Article.findOne({'_id': req.params.id})
@@ -83,7 +88,11 @@ router.get('/articles/:id', function(req, res){
     } 
     // otherwise, send the doc to the browser as a json object
     else {
-      res.json(doc);
+      var hbsObject = {doc};
+      console.log(doc.note);
+//      res.contentType(doc.imageType);
+ //     res.send(doc.imageData);
+      res.render('article', hbsObject);
     }
   });
 });
@@ -91,7 +100,7 @@ router.get('/articles/:id', function(req, res){
 //=========================================================
 // replace the existing note of an article with a new one
 // or if no note exists for an article, make the posted note it's note.
-router.post('/articles/:id', function(req, res){
+router.post('/article/:id', function(req, res){
   // create a new note instance and pass the req.body to the entry.
   var newNote = new Note(req.body);
 

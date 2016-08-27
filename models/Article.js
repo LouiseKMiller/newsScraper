@@ -26,10 +26,9 @@ var ArticleSchema = new Schema({
     type:String
   },
   imageData: {
-    data:Buffer,
-    contentType: String
+    type:Buffer
   },
-  imageData: {
+  imageType: {
     type:String
   },
   // the word 'default' is a Javascript reserved word. BP to wrap in quotes

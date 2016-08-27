@@ -1,0 +1,17 @@
+  <div id="wrapper">
+    <h1>Note Scraper</h1>
+    <h2><i>The Latest Popular Articles From The Atlantic</i></h2>
+    <div id="articles">
+    	{{#each doc}}
+	    	<a href="/article/{{this.id}}">
+	    		<p data-id="{{this.id}}">{{this.title}}<br>{{this.link}}</p>
+	    	</a>
+    	{{/each}}
+    </div>
+    <div id="notes"></div>
+  </div>
+
+
+
+
+

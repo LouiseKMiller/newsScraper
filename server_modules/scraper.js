@@ -44,9 +44,6 @@ module.exports = function(titles, cb)
 
           // link to heading is in <h2> element nested in <a> element
           var title = $(element).find('a').find('h2').text();
-          console.log("type of title", typeof(title));
-          console.log("type of titles", typeof(titles));
-          console.log("type of element in titles", typeof(titles[0]));
            
           if (titles.indexOf(title) == -1) {
             // save these results in an object that we'll push
@@ -54,7 +51,8 @@ module.exports = function(titles, cb)
             result.push({
               title:title,
               link:link,
-              imagePath:imgPath
+              imagePath:imgPath,
+              imageType:""
             });
           } else {
             console.log("scraped article already in database");
@@ -81,7 +79,7 @@ module.exports = function(titles, cb)
 
               // article text in <p> elements following div with article-body class
               $('.article-body').find('p').each(function(i,element){
-                articleText = articleText + $(element).text();
+                articleText = articleText +  $(element).text() + '&nbsp;';
               });
 
               result[i].text=articleText;
@@ -101,6 +99,7 @@ module.exports = function(titles, cb)
       } // end of getText function
 
 
+
       function getImage(cb){
         if (j<result.length){
           if (!result[j].imagePath) {
@@ -110,13 +109,14 @@ module.exports = function(titles, cb)
           } else {
             request(
               {uri: result[j].imagePath, 
-               encoding: 'binary'},
+               encoding: null},
               function(err, res, body){
                 if (error){
                   console.log("ERROR IN REQUEST FOR IMAGE DATA", error);
                 } else {
                   console.log('content-type:', res.headers['content-type']);
                   console.log('content-length:', res.headers['content-length']);
+
                   result[j].imageData = new Buffer(body, 'binary');
                   result[j].imageType = res.headers['content-type'];
                 // increment counter to avoid endless loop

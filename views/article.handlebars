@@ -1,0 +1,39 @@
+  <div id="wrapper">
+    <img id="artImg" src=""></img>
+    <h1>{{doc.title}}</h1>
+    <h2><i>{{doc.link}}</i></h2>
+    <div id="oneArticle">
+ 
+    	<p>{{doc.text}}</p>
+ 
+    </div>
+        <div id="notes">
+            <h2> New Note </h2>
+            <h2>{{doc._id}}</h2>
+            <form action='/article/{{doc._id}}' method="POST">
+                <input id="titleinput" name="title" >
+                <textarea id="bodyinput" name="body"></textarea>
+                <button type="submit" data-id="' + {{doc._id}} + '" id="savenote">Save Note</button>
+            </form>
+           {{#each doc.note}}
+        	   <h2>{{this.title}}</h2>
+    		    <p>{{this.body}}</p>
+                <button data-id="' + {{this._id}} + '" id="deletenote">Delete Note</button>
+                <button data-id="' + {{this._id}} + '" id="editnote">Edit Note</button>
+	       {{/each}}
+        </div>
+  </div>
+ <script>
+
+
+
+var encodedImage = new Buffer("{{imageData}}",'base64');
+var imageType = "{{doc.imageType}}";
+
+var codedImage = window.btoa(bufferData);
+console.log("this is codedImage",codedImage);
+ $('#artImg').attr("src","data:"+imageType+";base64,"+encodedImage);
+
+
+ </script>
+
